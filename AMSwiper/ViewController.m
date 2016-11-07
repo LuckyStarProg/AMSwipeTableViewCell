@@ -7,20 +7,37 @@
 //
 
 #import "ViewController.h"
+#import "AMSwipeTableViewCell.h"
 
-@interface ViewController ()
+@interface ViewController ()<UITableViewDelegate, UITableViewDataSource>
 
 @end
 
 @implementation ViewController
 
-- (void)viewDidLoad {
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 5;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    AMSwipeTableViewCell * cell=[[AMSwipeTableViewCell alloc] init];
+    cell.textLabel.text=[NSString stringWithFormat:@"Test %li",indexPath.row+1];
+    return cell;
+}
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
     // Do any additional setup after loading the view, typically from a nib.
 }
 
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

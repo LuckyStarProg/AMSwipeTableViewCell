@@ -13,6 +13,7 @@
 		27A08EA91DD0B80800880975 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EA71DD0B80800880975 /* Main.storyboard */; };
 		27A08EAB1DD0B80800880975 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EAA1DD0B80800880975 /* Assets.xcassets */; };
 		27A08EAE1DD0B80800880975 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EAC1DD0B80800880975 /* LaunchScreen.storyboard */; };
+		27A08EB71DD0B8E000880975 /* AMSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		27A08EAA1DD0B80800880975 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27A08EAD1DD0B80800880975 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27A08EAF1DD0B80800880975 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27A08EB51DD0B8E000880975 /* AMSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSwipeTableViewCell.h; sourceTree = "<group>"; };
+		27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSwipeTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,8 @@
 				27A08EAC1DD0B80800880975 /* LaunchScreen.storyboard */,
 				27A08EAF1DD0B80800880975 /* Info.plist */,
 				27A08E9E1DD0B80800880975 /* Supporting Files */,
+				27A08EB51DD0B8E000880975 /* AMSwipeTableViewCell.h */,
+				27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */,
 			);
 			path = AMSwiper;
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 			files = (
 				27A08EA61DD0B80800880975 /* ViewController.m in Sources */,
 				27A08EA31DD0B80800880975 /* AppDelegate.m in Sources */,
+				27A08EB71DD0B8E000880975 /* AMSwipeTableViewCell.m in Sources */,
 				27A08EA01DD0B80800880975 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
