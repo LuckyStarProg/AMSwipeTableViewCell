@@ -10,7 +10,8 @@
 
 typedef NS_ENUM(NSUInteger, SideDirection)
 {
-    SideDirectionRight=0,
+    SideDirectionNone=0,
+    SideDirectionRight,
     SideDirectionLeft
 };
 
