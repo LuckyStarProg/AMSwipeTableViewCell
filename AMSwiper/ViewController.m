@@ -37,6 +37,16 @@
     [cell addView:view1 forDirection:SideDirectionRight];
     [cell addView:view2 forDirection:SideDirectionRight];
     [cell addView:view3 forDirection:SideDirectionRight];
+    
+    UIView * view4=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 0)];
+    view4.backgroundColor=[UIColor greenColor];
+    view4.translatesAutoresizingMaskIntoConstraints=NO;
+    UIView * view5=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 0)];
+    view5.backgroundColor=[UIColor blackColor];
+    view5.translatesAutoresizingMaskIntoConstraints=NO;
+    
+    [cell addView:view4 forDirection:SideDirectionLeft];
+    [cell addView:view5 forDirection:SideDirectionLeft];
     return cell;
 }
 
