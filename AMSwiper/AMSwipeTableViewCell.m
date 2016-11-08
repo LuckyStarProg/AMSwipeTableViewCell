@@ -148,6 +148,7 @@
                                      constant:0.0]];
         }
     }
+    NSLog(@"%@",rootView.constraints);
 }
 
 -(void)timerTick
@@ -275,7 +276,6 @@
     self.leftContentConstraint.constant=position;
     self.rightContentConstraint.constant=position;
     self.leftButtonsConstraint.constant=self.currentDirection==SideDirectionRight?position:-position;
-    NSLog(@"%f",self.leftButtonsConstraint.constant);
     [self.backView layoutSubviews];
 }
 
@@ -284,14 +284,14 @@
     CGFloat result=0;
     if(self.currentDirection==SideDirectionLeft)
     {
-        for(NSNumber * num in self.leftViewsWidth)
+        for(NSNumber * num in self.rightViewsWidth)
         {
             result+=num.doubleValue;
         }
     }
     else
     {
-        for(NSNumber * num in self.rightViewsWidth)
+        for(NSNumber * num in self.leftViewsWidth)
         {
             result+=num.doubleValue;
         }
@@ -302,13 +302,14 @@
 -(void)setCurrentDirection:(SideDirection)currentDirection
 {
     _currentDirection=currentDirection;
+    [self setSelected:NO];
     if(currentDirection!=SideDirectionNone)
     {
         self.selectionStyle=UITableViewCellSelectionStyleNone;
     }
     else
     {
-        self.selectionStyle=UITableViewCellSelectionStyleDefault;
+        self.selectionStyle=UITableViewCellSelectionStyleGray;
     }
 }
 
@@ -512,6 +513,7 @@
                  if(finished)
                  {
                      self.currentDirection=SideDirectionLeft;
+                     NSLog(@"%@",NSStringFromCGRect(self.rightButtons.firstObject.frame));
                  }
              }];
         }
@@ -574,6 +576,16 @@
     }
 }
 
+-(void)setClipsForAllViewsForView:(UIView *)view
+{
+    [view setClipsToBounds:YES];
+    NSArray * subViews=view.subviews;
+    for(UIView * subView in subViews)
+    {
+        [self setClipsForAllViewsForView:subView];
+    }
+}
+
 -(void)addView:(UIView *)view forDirection:(SideDirection)direction;
 {
     if(direction==SideDirectionLeft)
@@ -584,8 +596,11 @@
     else if(direction==SideDirectionRight)
     {
         _rightButtons=[self.rightButtons arrayByAddingObject:view];
+        NSLog(@"%f",view.frame.size.width);
         [self.rightViewsWidth addObject:[NSNumber numberWithDouble:view.frame.size.width]];
     }
+    [view setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self setClipsForAllViewsForView:view];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

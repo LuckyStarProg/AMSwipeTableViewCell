@@ -14,6 +14,7 @@
 		27A08EAB1DD0B80800880975 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EAA1DD0B80800880975 /* Assets.xcassets */; };
 		27A08EAE1DD0B80800880975 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EAC1DD0B80800880975 /* LaunchScreen.storyboard */; };
 		27A08EB71DD0B8E000880975 /* AMSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */; };
+		27A08EB91DD22E4F00880975 /* view1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EB81DD22E4F00880975 /* view1.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		27A08EAF1DD0B80800880975 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27A08EB51DD0B8E000880975 /* AMSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSwipeTableViewCell.h; sourceTree = "<group>"; };
 		27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSwipeTableViewCell.m; sourceTree = "<group>"; };
+		27A08EB81DD22E4F00880975 /* view1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = view1.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 				27A08E9E1DD0B80800880975 /* Supporting Files */,
 				27A08EB51DD0B8E000880975 /* AMSwipeTableViewCell.h */,
 				27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */,
+				27A08EB81DD22E4F00880975 /* view1.xib */,
 			);
 			path = AMSwiper;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			files = (
 				27A08EAE1DD0B80800880975 /* LaunchScreen.storyboard in Resources */,
 				27A08EAB1DD0B80800880975 /* Assets.xcassets in Resources */,
+				27A08EB91DD22E4F00880975 /* view1.xib in Resources */,
 				27A08EA91DD0B80800880975 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

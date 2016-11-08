@@ -24,30 +24,24 @@
 {
     AMSwipeTableViewCell * cell=[[AMSwipeTableViewCell alloc] init];
     cell.textLabel.text=[NSString stringWithFormat:@"Test %li",indexPath.row+1];
-    UIView * view1=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 0)];
-    view1.backgroundColor=[UIColor blackColor];
-    view1.translatesAutoresizingMaskIntoConstraints=NO;
-    UIView * view2=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 0)];
-    view2.backgroundColor=[UIColor whiteColor];
-    view2.translatesAutoresizingMaskIntoConstraints=NO;
-    UIView * view3=[[UIView alloc] init];
-    view3.backgroundColor=[UIColor greenColor];
-    view3.translatesAutoresizingMaskIntoConstraints=NO;
+    UIButton * button=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    button.backgroundColor=[UIColor redColor];
+    [button setTitle:@"Delete" forState:UIControlStateNormal];
+    button.titleLabel.textAlignment=NSTextAlignmentCenter;
+    button.titleLabel.font=[UIFont systemFontOfSize:15.0];
+    button.titleLabel.textColor=[UIColor whiteColor];
+
+    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"view1" owner:self options:nil];
+    UIView * temp=[nib objectAtIndex:0];
+    [cell addView:temp forDirection:SideDirectionRight];
+    [cell addView:button forDirection:SideDirectionLeft];
     
-    [cell addView:view1 forDirection:SideDirectionRight];
-    [cell addView:view2 forDirection:SideDirectionRight];
-    [cell addView:view3 forDirection:SideDirectionRight];
-    
-    UIView * view4=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 0)];
-    view4.backgroundColor=[UIColor greenColor];
-    view4.translatesAutoresizingMaskIntoConstraints=NO;
-    UIView * view5=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 0)];
-    view5.backgroundColor=[UIColor blackColor];
-    view5.translatesAutoresizingMaskIntoConstraints=NO;
-    
-    [cell addView:view4 forDirection:SideDirectionLeft];
-    [cell addView:view5 forDirection:SideDirectionLeft];
     return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60.0;
 }
 
 - (void)viewDidLoad
