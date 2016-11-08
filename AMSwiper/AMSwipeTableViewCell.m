@@ -21,6 +21,7 @@
 @property (nonatomic)NSLayoutConstraint * leftButtonsConstraint;
 @property (nonatomic)UIView * backView;
 @property (nonatomic)UIView * buttonsView;
+@property (nonatomic)CGFloat maxWidth;
 @end
 
 @implementation AMSwipeTableViewCell
@@ -37,7 +38,7 @@
                                                   selector:@selector(timerTick)
                                                   userInfo:nil
                                                    repeats:YES];
-        
+        self.maxWidth=[self calculateViewsWidthForArray:self.rightButtons];
         self.buttonsView=[[UIView alloc] init];
         self.buttonsView.backgroundColor=[UIColor greenColor];
         self.buttonsView.translatesAutoresizingMaskIntoConstraints=NO;
@@ -78,27 +79,15 @@
                              attribute:NSLayoutAttributeTop
                              multiplier:1.0f
                              constant:0.0]];
-        UIView * view1=[[UIView alloc] init];
-        view1.backgroundColor=[UIColor blackColor];
-        view1.translatesAutoresizingMaskIntoConstraints=NO;
-        UIView * view2=[[UIView alloc] init];
-        view2.backgroundColor=[UIColor whiteColor];
-        view2.translatesAutoresizingMaskIntoConstraints=NO;
-        UIView * view3=[[UIView alloc] init];
-        view3.backgroundColor=[UIColor greenColor];
-        view3.translatesAutoresizingMaskIntoConstraints=NO;
-        UIView * view4=[[UIView alloc] init];
-        view4.backgroundColor=[UIColor yellowColor];
-        view4.translatesAutoresizingMaskIntoConstraints=NO;
         
-        [self setConstraintsForView:self.buttonsView byUsingViewsArray:[NSArray arrayWithObjects:view1,view2,view3,view4, nil]];
+        [self setConstraintsForView:self.buttonsView byUsingViewsArray:self.rightButtons];
         self.time=0.0;
         [self.swipeDetectingTimer fire];
     }
     return YES;
 }
 
--(void)setConstraintsForView:(UIView *)rootView byUsingViewsArray:(NSArray *)views
+-(void)setConstraintsForView:(UIView *)rootView byUsingViewsArray:(NSArray<UIView *> *)views
 {
     for(NSUInteger i=0;i<views.count;++i)
     {
@@ -134,13 +123,16 @@
                                          attribute:NSLayoutAttributeHeight
                                          multiplier:1.0f
                                          constant:0.0]];
+            
+            CGFloat del=views[i].frame.size.width?views[i+1].frame.size.width/views[i].frame.size.width:1;
+            del=del?del:1;
             [rootView addConstraint:[NSLayoutConstraint
                                          constraintWithItem:views[i]
                                          attribute:NSLayoutAttributeWidth
                                          relatedBy:NSLayoutRelationEqual
                                          toItem:views[i+1]
                                          attribute:NSLayoutAttributeWidth
-                                         multiplier:1.0f
+                                         multiplier:1.0f/del
                                          constant:0.0]];
         }
     }
@@ -209,6 +201,8 @@
 {
     if(self=[super init])
     {
+        _rightButtons=[NSArray array];
+        _leftButtons=[NSArray array];
         self.backgroundView=[[UIView alloc] initWithFrame:self.contentView.frame];
         self.backgroundView.backgroundColor=[UIColor redColor];
         self.contentView.backgroundColor=[UIColor blueColor];
@@ -319,38 +313,59 @@
     [self.backView layoutSubviews];
 }
 
+-(CGFloat)calculateViewsWidthForArray:(NSArray<UIView *> *)views
+{
+    CGFloat result=0;
+    for(NSInteger i=0; i<views.count; ++i)
+    {
+        CGFloat currentWidth=views[i].frame.size.width;
+        if(!currentWidth && i-1>=0)
+        {
+            currentWidth=views[i-1].frame.size.width;
+        }
+        else if(!currentWidth && i+1!=views.count && views[i+1].frame.size.width)
+        {
+            currentWidth=views[i+1].frame.size.width;
+        }
+        else if(!currentWidth)
+        {
+            currentWidth=100.0;
+        }
+        result+=currentWidth;
+    }
+    return result;
+}
+
 -(void)gesturePan
 {
     CGPoint currentPoint=[self.pan locationInView:self];
-    
     [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapOffset)];
     
-    NSLog(@"%f",self.buttonsView.frame.size.width);
     if(self.pan.state==UIGestureRecognizerStateEnded)
     {
-//        if(currentPoint.x>self.tapOffset)
-//        {
-//            self.panDirection=SideDirectionRight;
-//        }
-//        else
-//        {
-//            self.panDirection=SideDirectionLeft;
-//        }
-//        
-//        if(self.time>=0.2)
-//        {
-//            if(self.startOffset+(currentPoint.x-self.tapOffset)<200/2)
-//            {
-//                self.panDirection=SideDirectionLeft;
-//            }
-//            else
-//            {
-//                self.panDirection=SideDirectionRight;
-//            }
-//        }
-//        
-//        [self.swipeDetectingTimer invalidate];
-//        [self gestureSwipe];
+        if(currentPoint.x>self.tapOffset)
+        {
+            self.panDirection=SideDirectionRight;
+        }
+        else
+        {
+            self.panDirection=SideDirectionLeft;
+        }
+        
+        if(self.time>=0.2)
+        {
+            if(self.startOffset+(currentPoint.x-self.tapOffset)<self.maxWidth/2)
+            {
+                self.panDirection=SideDirectionLeft;
+            }
+            else
+            {
+                self.panDirection=SideDirectionRight;
+            }
+        }
+        
+        [self.swipeDetectingTimer invalidate];
+        [self gestureSwipe];
     }
 }
 
@@ -361,31 +376,37 @@
         if(self.panDirection==SideDirectionLeft)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"FrontViewControllerWillApeared" object:nil];
+            self.leftContentConstraint.constant=-self.maxWidth;
+            self.rightContentConstraint.constant=-self.maxWidth;
+            self.leftButtonsConstraint.constant=self.maxWidth;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^
             {
-                [self moveFrontViewOnPosition:-300.0];
+                [self.backView layoutIfNeeded];
             } completion:nil];
         }
         else if(self.panDirection==SideDirectionRight)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"BackViewControllerWillApeared" object:nil];
+            self.leftContentConstraint.constant=self.maxWidth;
+            self.rightContentConstraint.constant=self.maxWidth;
+            self.leftButtonsConstraint.constant=-self.maxWidth;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^
-            {
-                [self moveFrontViewOnPosition:300.0];
-            } completion:nil];
+             {
+                 [self.backView layoutIfNeeded];
+             } completion:nil];
         }
     }
 }
 
--(void)addButton:(UIButton *)button forDirection:(SideDirection)direction
+-(void)addView:(UIView *)view forDirection:(SideDirection)direction;
 {
-    if(direction)
+    if(direction==SideDirectionLeft)
     {
-        _leftButtons=[self.leftButtons arrayByAddingObject:button];
+        _leftButtons=[self.leftButtons arrayByAddingObject:view];
     }
-    else
+    else if(direction==SideDirectionRight)
     {
-        _rightButtons=[self.leftButtons arrayByAddingObject:button];
+        _rightButtons=[self.rightButtons arrayByAddingObject:view];
     }
 }
 

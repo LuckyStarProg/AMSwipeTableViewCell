@@ -17,9 +17,9 @@ typedef NS_ENUM(NSUInteger, SideDirection)
 
 @interface AMSwipeTableViewCell : UITableViewCell
 
-@property (nonatomic, readonly)NSArray<UIButton *> * rightButtons;
-@property (nonatomic, readonly)NSArray<UIButton *> * leftButtons;
+@property (nonatomic, readonly)NSArray<UIView *> * rightButtons;
+@property (nonatomic, readonly)NSArray<UIView *> * leftButtons;
 
--(void)addButton:(UIButton *)button forDirection:(SideDirection)direction;
+-(void)addView:(UIView *)view forDirection:(SideDirection)direction;
 
 @end
