@@ -481,9 +481,9 @@
         else if(self.panDirection==SideDirectionRight)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"BackViewControllerWillApeared" object:nil];
-            self.leftContentConstraint.constant=0;
-            self.rightContentConstraint.constant=0;
-            self.leftButtonsConstraint.constant=0;
+            self.leftContentConstraint.constant=-self.maxWidth;
+            self.rightContentConstraint.constant=-self.maxWidth;
+            self.leftButtonsConstraint.constant=self.maxWidth;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^
              {
                  [self.backView layoutIfNeeded];
@@ -586,7 +586,25 @@
     }
 }
 
--(void)addView:(UIView *)view forDirection:(SideDirection)direction;
+-(void)close
+{
+    if(self.currentDirection)
+    {
+        if(self.currentDirection==SideDirectionLeft)
+        {
+            self.panDirection=SideDirectionRight;
+            [self gestureSwipe];
+        }
+        else
+        {
+            self.panDirection=SideDirectionLeft;
+            [self gestureSwipe];
+        }
+    }
+}
+
+
+-(void)addView:(UIView *)view forDirection:(SideDirection)direction widthAction:(void (^)(void))action
 {
     if(direction==SideDirectionLeft)
     {

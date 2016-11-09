@@ -30,13 +30,20 @@
     button.titleLabel.textAlignment=NSTextAlignmentCenter;
     button.titleLabel.font=[UIFont systemFontOfSize:15.0];
     button.titleLabel.textColor=[UIColor whiteColor];
-
+    [button addTarget:self action:@selector(buttonDidTap) forControlEvents:UIControlEventTouchUpInside];
+    
     NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"view1" owner:self options:nil];
     UIView * temp=[nib objectAtIndex:0];
-    [cell addView:temp forDirection:SideDirectionRight];
-    [cell addView:button forDirection:SideDirectionLeft];
+    [cell addView:temp forDirection:SideDirectionRight widthAction:nil];
+    [cell addView:button forDirection:SideDirectionLeft widthAction:nil];
     
     return cell;
+}
+
+-(void)buttonDidTap
+{
+    AMSwipeTableViewCell * cell=[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [cell close];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

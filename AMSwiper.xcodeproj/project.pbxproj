@@ -15,6 +15,7 @@
 		27A08EAE1DD0B80800880975 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EAC1DD0B80800880975 /* LaunchScreen.storyboard */; };
 		27A08EB71DD0B8E000880975 /* AMSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */; };
 		27A08EB91DD22E4F00880975 /* view1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EB81DD22E4F00880975 /* view1.xib */; };
+		27A08EBC1DD3AA9E00880975 /* AMActionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A08EBB1DD3AA9E00880975 /* AMActionObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,8 @@
 		27A08EB51DD0B8E000880975 /* AMSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSwipeTableViewCell.h; sourceTree = "<group>"; };
 		27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSwipeTableViewCell.m; sourceTree = "<group>"; };
 		27A08EB81DD22E4F00880975 /* view1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = view1.xib; sourceTree = "<group>"; };
+		27A08EBA1DD3AA9E00880975 /* AMActionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMActionObject.h; sourceTree = "<group>"; };
+		27A08EBB1DD3AA9E00880975 /* AMActionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMActionObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +78,8 @@
 				27A08EB51DD0B8E000880975 /* AMSwipeTableViewCell.h */,
 				27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */,
 				27A08EB81DD22E4F00880975 /* view1.xib */,
+				27A08EBA1DD3AA9E00880975 /* AMActionObject.h */,
+				27A08EBB1DD3AA9E00880975 /* AMActionObject.m */,
 			);
 			path = AMSwiper;
 			sourceTree = "<group>";
@@ -161,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27A08EA61DD0B80800880975 /* ViewController.m in Sources */,
+				27A08EBC1DD3AA9E00880975 /* AMActionObject.m in Sources */,
 				27A08EA31DD0B80800880975 /* AppDelegate.m in Sources */,
 				27A08EB71DD0B8E000880975 /* AMSwipeTableViewCell.m in Sources */,
 				27A08EA01DD0B80800880975 /* main.m in Sources */,
