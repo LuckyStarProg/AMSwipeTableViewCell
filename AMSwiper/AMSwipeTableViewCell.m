@@ -32,7 +32,6 @@
 {
     if(self.pan==gestureRecognizer)
     {
-        NSLog(@"%@",self.superview.gestureRecognizers);
         self.startOffset=self.contentView.frame.origin.x;
         self.tapPoint=[gestureRecognizer locationInView:self];
         
@@ -152,7 +151,6 @@
                                      constant:0.0]];
         }
     }
-    NSLog(@"%@",rootView.constraints);
 }
 
 -(void)timerTick
@@ -235,15 +233,6 @@
                          multiplier:1.0f
                          constant:0.0]];
     
-    [self.backView addConstraint:[NSLayoutConstraint
-                                  constraintWithItem:self.backView
-                                  attribute:NSLayoutAttributeWidth
-                                  relatedBy:NSLayoutRelationEqual
-                                  toItem:nil
-                                  attribute:NSLayoutAttributeNotAnAttribute
-                                  multiplier:1.0f
-                                  constant:self.contentView.frame.size.width]];
-    
     [self addConstraint:[NSLayoutConstraint
                          constraintWithItem:self.backView
                          attribute:NSLayoutAttributeTrailing
@@ -298,7 +287,6 @@
     //self.pan.enabled=NO;
     self.currentDirection=SideDirectionNone;
     [self.contentView addGestureRecognizer:self.pan];
-    NSLog(@"%@",self.constraints);
 }
 
 -(void)moveFrontViewOnPosition:(CGFloat)position
@@ -560,7 +548,6 @@
                  if(finished)
                  {
                      self.currentDirection=SideDirectionLeft;
-                     NSLog(@"%@",NSStringFromCGRect(self.rightButtons.firstObject.frame));
                  }
              }];
         }
