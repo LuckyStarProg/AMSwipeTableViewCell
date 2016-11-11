@@ -11,7 +11,7 @@
 @interface AMSwipeTableViewCell()
 @property (nonatomic)UIPanGestureRecognizer * pan;
 @property (nonatomic)CGFloat startOffset;
-@property (nonatomic)CGFloat tapOffset;
+@property (nonatomic)CGPoint tapPoint;
 @property (nonatomic)SideDirection panDirection;
 @property (nonatomic)SideDirection currentDirection;
 @property (nonatomic)NSTimer * swipeDetectingTimer;
@@ -32,20 +32,24 @@
 {
     if(self.pan==gestureRecognizer)
     {
+        NSLog(@"%@",self.superview.gestureRecognizers);
         self.startOffset=self.contentView.frame.origin.x;
-        self.tapOffset=[gestureRecognizer locationInView:self].x;
+        self.tapPoint=[gestureRecognizer locationInView:self];
         
         self.swipeDetectingTimer=[NSTimer scheduledTimerWithTimeInterval:0.01
                                                     target:self
                                                   selector:@selector(timerTick)
                                                   userInfo:nil
                                                    repeats:YES];
-        if(!self.buttonsView)
-        {
-        }
+
         self.time=0.0;
         [self.swipeDetectingTimer fire];
     }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
+{
     return YES;
 }
 
@@ -159,116 +163,142 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    if(!self.backView)
+    {
+        [self initialize];
+    }
+}
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self=[super initWithCoder:aDecoder])
+    {
+        [self initialize];
+    }
+    return self;
+}
+
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    if(self=[super initWithStyle:style reuseIdentifier:reuseIdentifier])
+    {
+        [self initialize];
+    }
+    return self;
 }
 
 -(instancetype)init
 {
     if(self=[super init])
     {
-        _rightButtons=[NSArray array];
-        _leftButtons=[NSArray array];
-        self.leftViewsWidth=[NSMutableArray array];
-        self.rightViewsWidth=[NSMutableArray array];
-        self.backgroundView=[[UIView alloc] initWithFrame:self.contentView.frame];
-        self.backgroundView.backgroundColor=[UIColor redColor];
-        self.contentView.backgroundColor=[UIColor blueColor];
-        [self.contentView removeFromSuperview];
-        
-        self.backView=[[UIView alloc] init];
-        self.backView.translatesAutoresizingMaskIntoConstraints=NO;
-        [self addSubview:self.backView];
-        [self addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.backView
-                             attribute:NSLayoutAttributeBottom
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:self
-                             attribute:NSLayoutAttributeBottom
-                             multiplier:1.0f
-                             constant:0.0]];
-        
-        [self addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.backView
-                             attribute:NSLayoutAttributeTop
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:self
-                             attribute:NSLayoutAttributeTop
-                             multiplier:1.0f
-                             constant:0.0]];
-        
-        [self addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.backView
-                             attribute:NSLayoutAttributeLeading
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:self
-                             attribute:NSLayoutAttributeLeading
-                             multiplier:1.0f
-                             constant:0.0]];
-        
-        [self.backView addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.backView
-                             attribute:NSLayoutAttributeWidth
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:nil
-                             attribute:NSLayoutAttributeNotAnAttribute
-                             multiplier:1.0f
-                             constant:self.contentView.frame.size.width]];
-        
-        [self addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.backView
-                             attribute:NSLayoutAttributeTrailing
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:self
-                             attribute:NSLayoutAttributeTrailing
-                             multiplier:1.0f
-                             constant:0.0]];
-        
-        [self.backView addSubview:self.contentView];
-        self.contentView.translatesAutoresizingMaskIntoConstraints=NO;
-        self.leftContentConstraint=[NSLayoutConstraint
-                                    constraintWithItem:self.contentView
-                                    attribute:NSLayoutAttributeLeading
-                                    relatedBy:NSLayoutRelationEqual
-                                    toItem:self.backView
-                                    attribute:NSLayoutAttributeLeading
-                                    multiplier:1.0f
-                                    constant:0.0];
-        [self.backView addConstraint:self.leftContentConstraint];
-        
-        [self.backView addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.contentView
-                             attribute:NSLayoutAttributeBottom
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:self.backView
-                             attribute:NSLayoutAttributeBottom
-                             multiplier:1.0f
-                             constant:0.0]];
-        
-        [self.backView addConstraint:[NSLayoutConstraint
-                             constraintWithItem:self.contentView
-                             attribute:NSLayoutAttributeTop
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:self.backView
-                             attribute:NSLayoutAttributeTop
-                             multiplier:1.0f
-                             constant:0.0]];
-        
-        self.rightContentConstraint=[NSLayoutConstraint
-                                    constraintWithItem:self.contentView
-                                    attribute:NSLayoutAttributeTrailing
-                                    relatedBy:NSLayoutRelationEqual
-                                    toItem:self.backView
-                                    attribute:NSLayoutAttributeTrailing
-                                    multiplier:1.0f
-                                    constant:0.0];
-        [self.backView addConstraint:self.rightContentConstraint];
-        
-        self.pan=[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gesturePan)];
-        self.pan.delegate=self;
-        self.currentDirection=SideDirectionNone;
-        [self.contentView addGestureRecognizer:self.pan];
-        NSLog(@"%@",self.constraints);
+        [self initialize];
     }
     return self;
+}
+
+-(void)initialize
+{
+    _rightButtons=[NSArray array];
+    _leftButtons=[NSArray array];
+    self.leftViewsWidth=[NSMutableArray array];
+    self.rightViewsWidth=[NSMutableArray array];
+    self.backgroundView=[[UIView alloc] initWithFrame:self.contentView.frame];
+    [self.contentView removeFromSuperview];
+    
+    self.backView=[[UIView alloc] init];
+    self.backView.translatesAutoresizingMaskIntoConstraints=NO;
+    [self addSubview:self.backView];
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.backView
+                         attribute:NSLayoutAttributeBottom
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeBottom
+                         multiplier:1.0f
+                         constant:0.0]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.backView
+                         attribute:NSLayoutAttributeTop
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeTop
+                         multiplier:1.0f
+                         constant:0.0]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.backView
+                         attribute:NSLayoutAttributeLeading
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeLeading
+                         multiplier:1.0f
+                         constant:0.0]];
+    
+    [self.backView addConstraint:[NSLayoutConstraint
+                                  constraintWithItem:self.backView
+                                  attribute:NSLayoutAttributeWidth
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:nil
+                                  attribute:NSLayoutAttributeNotAnAttribute
+                                  multiplier:1.0f
+                                  constant:self.contentView.frame.size.width]];
+    
+    [self addConstraint:[NSLayoutConstraint
+                         constraintWithItem:self.backView
+                         attribute:NSLayoutAttributeTrailing
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:self
+                         attribute:NSLayoutAttributeTrailing
+                         multiplier:1.0f
+                         constant:0.0]];
+    
+    [self.backView addSubview:self.contentView];
+    self.contentView.translatesAutoresizingMaskIntoConstraints=NO;
+    self.leftContentConstraint=[NSLayoutConstraint
+                                constraintWithItem:self.contentView
+                                attribute:NSLayoutAttributeLeading
+                                relatedBy:NSLayoutRelationEqual
+                                toItem:self.backView
+                                attribute:NSLayoutAttributeLeading
+                                multiplier:1.0f
+                                constant:0.0];
+    [self.backView addConstraint:self.leftContentConstraint];
+    
+    [self.backView addConstraint:[NSLayoutConstraint
+                                  constraintWithItem:self.contentView
+                                  attribute:NSLayoutAttributeBottom
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:self.backView
+                                  attribute:NSLayoutAttributeBottom
+                                  multiplier:1.0f
+                                  constant:0.0]];
+    
+    [self.backView addConstraint:[NSLayoutConstraint
+                                  constraintWithItem:self.contentView
+                                  attribute:NSLayoutAttributeTop
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:self.backView
+                                  attribute:NSLayoutAttributeTop
+                                  multiplier:1.0f
+                                  constant:0.0]];
+    
+    self.rightContentConstraint=[NSLayoutConstraint
+                                 constraintWithItem:self.contentView
+                                 attribute:NSLayoutAttributeTrailing
+                                 relatedBy:NSLayoutRelationEqual
+                                 toItem:self.backView
+                                 attribute:NSLayoutAttributeTrailing
+                                 multiplier:1.0f
+                                 constant:0.0];
+    [self.backView addConstraint:self.rightContentConstraint];
+    
+    self.pan=[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(gesturePan)];
+    self.pan.delegate=self;
+    //self.pan.enabled=NO;
+    self.currentDirection=SideDirectionNone;
+    [self.contentView addGestureRecognizer:self.pan];
+    NSLog(@"%@",self.constraints);
 }
 
 -(void)moveFrontViewOnPosition:(CGFloat)position
@@ -316,18 +346,31 @@
 -(void)gesturePan
 {
     CGPoint currentPoint=[self.pan locationInView:self];
+    CGFloat height=currentPoint.y-self.tapPoint.y;
+    height=height<0?-height:height;
+    CGFloat width=currentPoint.x-self.tapPoint.x;
+    width=width<0?-width:width;
     
-    if(self.currentDirection==SideDirectionLeft && self.startOffset+(currentPoint.x-self.tapOffset)<1)
+//    if(height>width)
+//    {
+//        self.pan.enabled=NO;
+//        [self.pan setValue:[NSNumber numberWithLong:UIGestureRecognizerStateEnded] forKey:@"state"];
+//        NSLog(@"%lu",self.pan.state);
+//        NSLog(@"%lu",UIGestureRecognizerStateEnded);
+//        return;
+//    }
+//    
+    if(self.currentDirection==SideDirectionLeft && self.startOffset+(currentPoint.x-self.tapPoint.x)<1 && self.rightButtons.count)
     {
-        [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapOffset)];
+        [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapPoint.x)];
     }
-    else if(self.currentDirection==SideDirectionRight && self.startOffset+(currentPoint.x-self.tapOffset)>1)
+    else if(self.currentDirection==SideDirectionRight && self.startOffset+(currentPoint.x-self.tapPoint.x)>1  && self.leftButtons.count)
     {
-        [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapOffset)];
+        [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapPoint.x)];
     }
     else if(self.currentDirection==SideDirectionNone)
     {
-        if(currentPoint.x>self.tapOffset)
+        if(currentPoint.x>self.tapPoint.x)
         {
             self.currentDirection=SideDirectionRight;
             self.maxWidth=[self calculateViewsWidth];
@@ -374,7 +417,7 @@
             
             [self setConstraintsForView:self.buttonsView forDirection:SideDirectionRight];
         }
-        else if(currentPoint.x<self.tapOffset)
+        else if(currentPoint.x<self.tapPoint.x)
         {
             self.currentDirection=SideDirectionLeft;
             self.maxWidth=[self calculateViewsWidth];
@@ -425,12 +468,16 @@
         {
             self.currentDirection=SideDirectionNone;
         }
-        [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapOffset)];
+        
+        if((self.currentDirection==SideDirectionLeft && self.rightButtons.count) || (self.currentDirection==SideDirectionRight && self.leftButtons.count))
+        {
+            [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapPoint.x)];
+        }
     }
     
     if(self.pan.state==UIGestureRecognizerStateEnded)
     {
-        if(currentPoint.x>self.tapOffset)
+        if(currentPoint.x>self.tapPoint.x)
         {
             self.panDirection=SideDirectionRight;
         }
@@ -614,7 +661,6 @@
     else if(direction==SideDirectionRight)
     {
         _rightButtons=[self.rightButtons arrayByAddingObject:view];
-        NSLog(@"%f",view.frame.size.width);
         [self.rightViewsWidth addObject:[NSNumber numberWithDouble:view.frame.size.width]];
     }
     [view setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -624,7 +670,10 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-
+//    if(selected)
+//    {
+//        self.pan.enabled=YES;
+//    }
     // Configure the view for the selected state
 }
 

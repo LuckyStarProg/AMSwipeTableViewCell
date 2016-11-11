@@ -17,26 +17,26 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return 1000;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AMSwipeTableViewCell * cell=[[AMSwipeTableViewCell alloc] init];
-    cell.textLabel.text=[NSString stringWithFormat:@"Test %li",indexPath.row+1];
-    UIButton * button=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    button.backgroundColor=[UIColor redColor];
-    [button setTitle:@"Delete" forState:UIControlStateNormal];
-    button.titleLabel.textAlignment=NSTextAlignmentCenter;
-    button.titleLabel.font=[UIFont systemFontOfSize:15.0];
-    button.titleLabel.textColor=[UIColor whiteColor];
-    [button addTarget:self action:@selector(buttonDidTap) forControlEvents:UIControlEventTouchUpInside];
+    AMSwipeTableViewCell * cell=(AMSwipeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"customCell"];
+        
+        cell.textLabel.text=[NSString stringWithFormat:@"Test %li",indexPath.row+1];
+        UIButton * button=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        button.backgroundColor=[UIColor redColor];
+        [button setTitle:@"Delete" forState:UIControlStateNormal];
+        button.titleLabel.textAlignment=NSTextAlignmentCenter;
+        button.titleLabel.font=[UIFont systemFontOfSize:15.0];
+        button.titleLabel.textColor=[UIColor whiteColor];
+        [button addTarget:self action:@selector(buttonDidTap) forControlEvents:UIControlEventTouchUpInside];
     
-    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"view1" owner:self options:nil];
-    UIView * temp=[nib objectAtIndex:0];
-    [cell addView:temp forDirection:SideDirectionRight widthAction:nil];
-    [cell addView:button forDirection:SideDirectionLeft widthAction:nil];
-    
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"view1" owner:self options:nil];
+        UIView * temp=[nib objectAtIndex:0];
+        [cell addView:temp forDirection:SideDirectionRight widthAction:nil];
+        [cell addView:button forDirection:SideDirectionRight widthAction:nil];
     return cell;
 }
 
@@ -56,6 +56,8 @@
     [super viewDidLoad];
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
+    UINib *cellNib = [UINib nibWithNibName:@"customCell" bundle:[NSBundle mainBundle]];
+    [self.tableView registerNib:cellNib forCellReuseIdentifier:@"customCell"];
     // Do any additional setup after loading the view, typically from a nib.
 }
 

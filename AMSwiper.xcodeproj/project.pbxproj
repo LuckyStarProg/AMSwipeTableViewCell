@@ -16,6 +16,7 @@
 		27A08EB71DD0B8E000880975 /* AMSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A08EB61DD0B8E000880975 /* AMSwipeTableViewCell.m */; };
 		27A08EB91DD22E4F00880975 /* view1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EB81DD22E4F00880975 /* view1.xib */; };
 		27A08EBC1DD3AA9E00880975 /* AMActionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A08EBB1DD3AA9E00880975 /* AMActionObject.m */; };
+		27A08EBE1DD5B6DB00880975 /* customCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27A08EBD1DD5B6DB00880975 /* customCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		27A08EB81DD22E4F00880975 /* view1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = view1.xib; sourceTree = "<group>"; };
 		27A08EBA1DD3AA9E00880975 /* AMActionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMActionObject.h; sourceTree = "<group>"; };
 		27A08EBB1DD3AA9E00880975 /* AMActionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMActionObject.m; sourceTree = "<group>"; };
+		27A08EBD1DD5B6DB00880975 /* customCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = customCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				27A08EB81DD22E4F00880975 /* view1.xib */,
 				27A08EBA1DD3AA9E00880975 /* AMActionObject.h */,
 				27A08EBB1DD3AA9E00880975 /* AMActionObject.m */,
+				27A08EBD1DD5B6DB00880975 /* customCell.xib */,
 			);
 			path = AMSwiper;
 			sourceTree = "<group>";
@@ -151,6 +154,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27A08EBE1DD5B6DB00880975 /* customCell.xib in Resources */,
 				27A08EAE1DD0B80800880975 /* LaunchScreen.storyboard in Resources */,
 				27A08EAB1DD0B80800880975 /* Assets.xcassets in Resources */,
 				27A08EB91DD22E4F00880975 /* view1.xib in Resources */,
