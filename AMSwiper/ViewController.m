@@ -23,7 +23,8 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AMSwipeTableViewCell * cell=(AMSwipeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"customCell"];
-        
+    if(cell.rightButtons.count==0)
+    {
         cell.textLabel.text=[NSString stringWithFormat:@"Test %li",indexPath.row+1];
         UIButton * button=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         button.backgroundColor=[UIColor redColor];
@@ -37,6 +38,7 @@
         UIView * temp=[nib objectAtIndex:0];
         [cell addView:temp forDirection:SideDirectionRight widthAction:nil];
         [cell addView:button forDirection:SideDirectionRight widthAction:nil];
+    }
     return cell;
 }
 
