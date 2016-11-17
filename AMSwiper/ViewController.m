@@ -22,22 +22,28 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AMSwipeTableViewCell * cell=(AMSwipeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"customCell"];
+    AMSwipeTableViewCell *  cell=(AMSwipeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"customCell"];
     if(cell.rightButtons.count==0)
     {
         cell.textLabel.text=[NSString stringWithFormat:@"Test %li",indexPath.row+1];
-        UIButton * button=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-        button.backgroundColor=[UIColor redColor];
-        [button setTitle:@"Delete" forState:UIControlStateNormal];
-        button.titleLabel.textAlignment=NSTextAlignmentCenter;
-        button.titleLabel.font=[UIFont systemFontOfSize:15.0];
-        button.titleLabel.textColor=[UIColor whiteColor];
-        [button addTarget:self action:@selector(buttonDidTap) forControlEvents:UIControlEventTouchUpInside];
-    
+        UILabel * label=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+        label.text=@"Delete";
+        label.textAlignment=NSTextAlignmentCenter;
+        label.textColor=[UIColor whiteColor];
+
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"view1" owner:self options:nil];
         UIView * temp=[nib objectAtIndex:0];
-        [cell addView:temp forDirection:SideDirectionRight widthAction:nil];
-        [cell addView:button forDirection:SideDirectionRight widthAction:nil];
+        
+        __weak typeof(cell) weakCell = cell;
+        [cell addView:temp forDirection:SideDirectionRight withAction:^
+         {
+             [weakCell close];
+         }];
+        
+        [cell addButtonWithLabel:label andBackgroundColor:[UIColor redColor] forDirection:SideDirectionRight withAction:^
+         {
+             [weakCell close];
+         }];
     }
     return cell;
 }

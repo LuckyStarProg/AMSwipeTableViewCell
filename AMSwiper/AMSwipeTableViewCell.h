@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AMActionObject.h"
 
 typedef NS_ENUM(NSUInteger, SideDirection)
 {
@@ -20,7 +21,8 @@ typedef NS_ENUM(NSUInteger, SideDirection)
 @property (nonatomic, readonly)NSArray<UIView *> * rightButtons;
 @property (nonatomic, readonly)NSArray<UIView *> * leftButtons;
 
--(void)addView:(UIView *)view forDirection:(SideDirection)direction widthAction:(void (^)(void))action;
+-(void)addView:(UIView *)view forDirection:(SideDirection)direction withAction:(void (^)(void))action;
+-(void)addButtonWithLabel:(UILabel *)label andBackgroundColor:(UIColor *)color forDirection:(SideDirection)direction withAction:(void (^)(void))action;
 -(void)close;
 
 @end

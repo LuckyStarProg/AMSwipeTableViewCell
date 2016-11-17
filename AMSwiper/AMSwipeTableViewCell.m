@@ -22,8 +22,12 @@
 @property (nonatomic)UIView * backView;
 @property (nonatomic)UIView * buttonsView;
 @property (nonatomic)CGFloat maxWidth;
-@property (nonatomic)NSMutableArray * leftViewsWidth;
-@property (nonatomic)NSMutableArray * rightViewsWidth;
+//@property (nonatomic)NSMutableArray * leftViewsWidth;
+//@property (nonatomic)NSMutableArray * rightViewsWidth;
+//@property (nonatomic)NSMutableArray<void (^)(void)> * leftActions;
+//@property (nonatomic)NSMutableArray<void (^)(void)> * rightActions;
+@property (nonatomic)NSMutableArray<AMActionObject *> * leftObjects;
+@property (nonatomic)NSMutableArray<AMActionObject *> * rightObjects;
 @end
 
 @implementation AMSwipeTableViewCell
@@ -52,19 +56,40 @@
     return YES;
 }
 
+-(NSArray<UIView *> *)rightButtons
+{
+    NSMutableArray * array=[NSMutableArray arrayWithCapacity:self.rightObjects.count];
+    for(NSUInteger i=0;i<self.rightObjects.count;++i)
+    {
+        array[i]=self.rightObjects[i].button;
+    }
+    return array;
+}
+
+-(NSArray<UIView *> *)leftButtons
+{
+    NSMutableArray * array=[NSMutableArray arrayWithCapacity:self.leftObjects.count];
+    for(NSUInteger i=0;i<self.leftObjects.count;++i)
+    {
+        array[i]=self.leftObjects[i].button;
+    }
+    return array;
+}
+
 -(void)setConstraintsForView:(UIView *)rootView forDirection:(SideDirection)direction
 {
-    NSArray<UIView *> * views=direction==SideDirectionLeft?self.rightButtons:self.leftButtons;
-    NSArray * viewsWidth=direction==SideDirectionLeft?self.rightViewsWidth:self.leftViewsWidth;
-    for(NSUInteger i=0;i<views.count;++i)
+    NSArray<AMActionObject *> * array=direction==SideDirectionLeft?self.rightObjects:self.leftObjects;
+    //NSArray<UIView *> * views=direction==SideDirectionLeft?self.rightButtons:self.leftButtons;
+    //NSArray * viewsWidth=direction==SideDirectionLeft?[NSArray arra]:self.leftViewsWidth;
+    for(NSUInteger i=0;i<array.count;++i)
     {
-        [rootView addSubview:views[i]];
+        [rootView addSubview:array[i].button];
     }
     
-    for(NSUInteger i=0;i<views.count;++i)
+    for(NSUInteger i=0;i<array.count;++i)
     {
         [rootView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:views[i]
+                                         constraintWithItem:array[i].button
                                          attribute:NSLayoutAttributeTop
                                          relatedBy:NSLayoutRelationEqual
                                          toItem:rootView
@@ -73,42 +98,42 @@
                                          constant:0.0]];
         
         [rootView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:views[i]
+                                         constraintWithItem:array[i].button
                                          attribute:NSLayoutAttributeBottom
                                          relatedBy:NSLayoutRelationEqual
                                          toItem:rootView
                                          attribute:NSLayoutAttributeBottom
                                          multiplier:1.0f
                                          constant:0.0]];
-        if(views.count>0 && i+1!=views.count)
+        if(array.count>0 && i+1!=array.count)
         {
             [rootView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:views[i]
+                                         constraintWithItem:array[i].button
                                          attribute:NSLayoutAttributeHeight
                                          relatedBy:NSLayoutRelationEqual
-                                         toItem:views[i+1]
+                                         toItem:array[i+1].button
                                          attribute:NSLayoutAttributeHeight
                                          multiplier:1.0f
                                          constant:0.0]];
-            CGFloat del=[viewsWidth[i] doubleValue]?[viewsWidth[i+1] doubleValue]/[viewsWidth[i] doubleValue]:1;
+            CGFloat del=array[i].width?array[i+1].width/array[i].width:1;
             del=del?del:1;
             [rootView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:views[i]
+                                         constraintWithItem:array[i].button
                                          attribute:NSLayoutAttributeWidth
                                          relatedBy:NSLayoutRelationEqual
-                                         toItem:views[i+1]
+                                         toItem:array[i+1].button
                                          attribute:NSLayoutAttributeWidth
                                          multiplier:1.0f/del
                                          constant:0.0]];
         }
     }
     
-    for(NSInteger i=0;i<views.count;++i)
+    for(NSInteger i=0;i<array.count;++i)
     {
         if(i-1<0)
         {
             [rootView addConstraint:[NSLayoutConstraint
-                                     constraintWithItem:views[i]
+                                     constraintWithItem:array[i].button
                                      attribute:NSLayoutAttributeLeading
                                      relatedBy:NSLayoutRelationEqual
                                      toItem:rootView
@@ -119,19 +144,19 @@
         else
         {
             [rootView addConstraint:[NSLayoutConstraint
-                                     constraintWithItem:views[i]
+                                     constraintWithItem:array[i].button
                                      attribute:NSLayoutAttributeLeading
                                      relatedBy:NSLayoutRelationEqual
-                                     toItem:views[i-1]
+                                     toItem:array[i-1].button
                                      attribute:NSLayoutAttributeTrailing
                                      multiplier:1.0f
                                      constant:0.0]];
         }
         
-        if(i+1==views.count)
+        if(i+1==array.count)
         {
             [rootView addConstraint:[NSLayoutConstraint
-                                     constraintWithItem:views[i]
+                                     constraintWithItem:array[i].button
                                      attribute:NSLayoutAttributeTrailing
                                      relatedBy:NSLayoutRelationEqual
                                      toItem:rootView
@@ -142,10 +167,10 @@
         else
         {
             [rootView addConstraint:[NSLayoutConstraint
-                                     constraintWithItem:views[i]
+                                     constraintWithItem:array[i].button
                                      attribute:NSLayoutAttributeTrailing
                                      relatedBy:NSLayoutRelationEqual
-                                     toItem:views[i+1]
+                                     toItem:array[i+1].button
                                      attribute:NSLayoutAttributeLeading
                                      multiplier:1.0f
                                      constant:0.0]];
@@ -196,10 +221,14 @@
 
 -(void)initialize
 {
-    _rightButtons=[NSArray array];
-    _leftButtons=[NSArray array];
-    self.leftViewsWidth=[NSMutableArray array];
-    self.rightViewsWidth=[NSMutableArray array];
+    //_rightButtons=[NSArray array];
+    //_leftButtons=[NSArray array];
+    self.leftObjects=[NSMutableArray array];
+    self.rightObjects=[NSMutableArray array];
+//    self.leftActions=[NSMutableArray array];
+//    self.rightActions=[NSMutableArray array];
+//    self.leftViewsWidth=[NSMutableArray array];
+//    self.rightViewsWidth=[NSMutableArray array];
     self.backgroundView=[[UIView alloc] initWithFrame:self.contentView.frame];
     [self.contentView removeFromSuperview];
     
@@ -302,16 +331,16 @@
     CGFloat result=0;
     if(self.currentDirection==SideDirectionLeft)
     {
-        for(NSNumber * num in self.rightViewsWidth)
+        for(AMActionObject * obj in self.rightObjects)
         {
-            result+=num.doubleValue;
+            result+=obj.width;
         }
     }
     else
     {
-        for(NSNumber * num in self.leftViewsWidth)
+        for(AMActionObject * obj in self.leftObjects)
         {
-            result+=num.doubleValue;
+            result+=obj.width;
         }
     }
     return result;
@@ -338,21 +367,12 @@
     height=height<0?-height:height;
     CGFloat width=currentPoint.x-self.tapPoint.x;
     width=width<0?-width:width;
-    
-//    if(height>width)
-//    {
-//        self.pan.enabled=NO;
-//        [self.pan setValue:[NSNumber numberWithLong:UIGestureRecognizerStateEnded] forKey:@"state"];
-//        NSLog(@"%lu",self.pan.state);
-//        NSLog(@"%lu",UIGestureRecognizerStateEnded);
-//        return;
-//    }
-//    
-    if(self.currentDirection==SideDirectionLeft && self.startOffset+(currentPoint.x-self.tapPoint.x)<1 && self.rightButtons.count)
+
+    if(self.currentDirection==SideDirectionLeft && self.startOffset+(currentPoint.x-self.tapPoint.x)<1 && self.rightObjects.count)
     {
         [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapPoint.x)];
     }
-    else if(self.currentDirection==SideDirectionRight && self.startOffset+(currentPoint.x-self.tapPoint.x)>1  && self.leftButtons.count)
+    else if(self.currentDirection==SideDirectionRight && self.startOffset+(currentPoint.x-self.tapPoint.x)>1  && self.leftObjects.count)
     {
         [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapPoint.x)];
     }
@@ -457,7 +477,7 @@
             self.currentDirection=SideDirectionNone;
         }
         
-        if((self.currentDirection==SideDirectionLeft && self.rightButtons.count) || (self.currentDirection==SideDirectionRight && self.leftButtons.count))
+        if((self.currentDirection==SideDirectionLeft && self.rightObjects.count) || (self.currentDirection==SideDirectionRight && self.leftObjects.count))
         {
             [self moveFrontViewOnPosition:self.startOffset+(currentPoint.x-self.tapPoint.x)];
         }
@@ -637,19 +657,130 @@
     }
 }
 
-
--(void)addView:(UIView *)view forDirection:(SideDirection)direction widthAction:(void (^)(void))action
+-(void)buttonTrigered:(UIView *)view
 {
+        if(self.currentDirection==SideDirectionLeft)
+        {
+            for(NSUInteger i=0;i<self.rightObjects.count;++i)
+            {
+                if(view==self.rightObjects[i].button.subviews.lastObject)
+                {
+                    if(self.rightObjects[i].action) self.rightObjects[i].action();
+                }
+            }
+        }
+        else
+        {
+            for(NSUInteger i=0;i<self.leftObjects.count;++i)
+            {
+                if(view==self.leftObjects[i].button.subviews.lastObject)
+                {
+                    if(self.leftObjects[i].action) self.leftObjects[i].action();
+                }
+            }
+        }
+}
+
+-(void)addButtonWithLabel:(UILabel *)label andBackgroundColor:(UIColor *)color forDirection:(SideDirection)direction withAction:(void (^)(void))action
+{
+    UIView * view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, label.frame.size.width, 0)];
+    view.backgroundColor=color;
+    label.translatesAutoresizingMaskIntoConstraints=NO;
+    [view addSubview:label];
+    [view addConstraint:[NSLayoutConstraint
+                         constraintWithItem:label
+                         attribute:NSLayoutAttributeCenterX
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:view
+                         attribute:NSLayoutAttributeCenterX
+                         multiplier:1.0f
+                         constant:0.0]];
+    
+    [view addConstraint:[NSLayoutConstraint
+                         constraintWithItem:label
+                         attribute:NSLayoutAttributeCenterY
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:view
+                         attribute:NSLayoutAttributeCenterY
+                         multiplier:1.0f
+                         constant:0.0]];
+    
+    [label addConstraint:[NSLayoutConstraint
+                         constraintWithItem:label
+                         attribute:NSLayoutAttributeWidth
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:nil
+                         attribute:NSLayoutAttributeNotAnAttribute
+                         multiplier:1.0f
+                         constant:label.frame.size.width]];
+    
+    [label addConstraint:[NSLayoutConstraint
+                         constraintWithItem:label
+                         attribute:NSLayoutAttributeHeight
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:nil
+                         attribute:NSLayoutAttributeNotAnAttribute
+                         multiplier:1.0f
+                         constant:label.frame.size.height]];
+    [self addView:view forDirection:direction withAction:action];
+}
+
+-(void)addView:(UIView *)view forDirection:(SideDirection)direction withAction:(void (^)(void))action
+{
+    AMActionObject *obj=[AMActionObject new];
+    obj.button=view;
+    obj.width=view.frame.size.width;
+    obj.action=action;
     if(direction==SideDirectionLeft)
     {
-        _leftButtons=[self.leftButtons arrayByAddingObject:view];
-        [self.leftViewsWidth addObject:[NSNumber numberWithDouble:view.frame.size.width]];
+        [self.leftObjects addObject:obj];
     }
     else if(direction==SideDirectionRight)
     {
-        _rightButtons=[self.rightButtons arrayByAddingObject:view];
-        [self.rightViewsWidth addObject:[NSNumber numberWithDouble:view.frame.size.width]];
+        [self.rightObjects addObject:obj];
     }
+    
+    UIControl * control=[[UIControl alloc] initWithFrame:view.frame];
+    [control addTarget:self action:@selector(buttonTrigered:) forControlEvents:UIControlEventTouchUpInside];
+    control.translatesAutoresizingMaskIntoConstraints=NO;
+  
+    [view addSubview:control];
+    [view addConstraint:[NSLayoutConstraint
+                                  constraintWithItem:control
+                                  attribute:NSLayoutAttributeBottom
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:view
+                                  attribute:NSLayoutAttributeBottom
+                                  multiplier:1.0f
+                                  constant:0.0]];
+    
+    [view addConstraint:[NSLayoutConstraint
+                                  constraintWithItem:control
+                                  attribute:NSLayoutAttributeLeading
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:view
+                                  attribute:NSLayoutAttributeLeading
+                                  multiplier:1.0f
+                                  constant:0.0]];
+    
+    [view addConstraint:[NSLayoutConstraint
+                         constraintWithItem:control
+                         attribute:NSLayoutAttributeTrailing
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:view
+                         attribute:NSLayoutAttributeTrailing
+                         multiplier:1.0f
+                         constant:0.0]];
+    
+    [view addConstraint:[NSLayoutConstraint
+                         constraintWithItem:control
+                         attribute:NSLayoutAttributeTop
+                         relatedBy:NSLayoutRelationEqual
+                         toItem:view
+                         attribute:NSLayoutAttributeTop
+                         multiplier:1.0f
+                         constant:0.0]];
+    
     [view setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self setClipsForAllViewsForView:view];
 }
@@ -657,11 +788,6 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-//    if(selected)
-//    {
-//        self.pan.enabled=YES;
-//    }
-    // Configure the view for the selected state
 }
 
 @end
