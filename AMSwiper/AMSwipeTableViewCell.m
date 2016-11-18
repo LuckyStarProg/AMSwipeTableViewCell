@@ -22,10 +22,6 @@
 @property (nonatomic)UIView * backView;
 @property (nonatomic)UIView * buttonsView;
 @property (nonatomic)CGFloat maxWidth;
-//@property (nonatomic)NSMutableArray * leftViewsWidth;
-//@property (nonatomic)NSMutableArray * rightViewsWidth;
-//@property (nonatomic)NSMutableArray<void (^)(void)> * leftActions;
-//@property (nonatomic)NSMutableArray<void (^)(void)> * rightActions;
 @property (nonatomic)NSMutableArray<AMActionObject *> * leftObjects;
 @property (nonatomic)NSMutableArray<AMActionObject *> * rightObjects;
 @end
@@ -79,8 +75,6 @@
 -(void)setConstraintsForView:(UIView *)rootView forDirection:(SideDirection)direction
 {
     NSArray<AMActionObject *> * array=direction==SideDirectionLeft?self.rightObjects:self.leftObjects;
-    //NSArray<UIView *> * views=direction==SideDirectionLeft?self.rightButtons:self.leftButtons;
-    //NSArray * viewsWidth=direction==SideDirectionLeft?[NSArray arra]:self.leftViewsWidth;
     for(NSUInteger i=0;i<array.count;++i)
     {
         [rootView addSubview:array[i].button];
@@ -210,25 +204,10 @@
     return self;
 }
 
--(instancetype)init
-{
-    if(self=[super init])
-    {
-        [self initialize];
-    }
-    return self;
-}
-
 -(void)initialize
 {
-    //_rightButtons=[NSArray array];
-    //_leftButtons=[NSArray array];
     self.leftObjects=[NSMutableArray array];
     self.rightObjects=[NSMutableArray array];
-//    self.leftActions=[NSMutableArray array];
-//    self.rightActions=[NSMutableArray array];
-//    self.leftViewsWidth=[NSMutableArray array];
-//    self.rightViewsWidth=[NSMutableArray array];
     self.backgroundView=[[UIView alloc] initWithFrame:self.contentView.frame];
     [self.contentView removeFromSuperview];
     
