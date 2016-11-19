@@ -7,7 +7,7 @@ AMSwiper -  framework that provide smart swipe TableViewCell to left or right di
 <p>or dequeue cell from register nib...</p>
     AMSwipeTableViewCell *  cell=(AMSwipeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"customCell"];
 <p>To add button/view you have 2 methods:</p>
-    [cell addView:(UIView *) forDirection:(SideDirection) withAction:^(void)action#]
+    [cell addView:(UIView *) forDirection:(SideDirection) withAction:^(void)action]
 <p>and...</p>
     [cell addButtonWithLabel:(UILabel *) andBackgroundColor:(UIColor *) forDirection:(SideDirection) withAction:^(void)action]
 
